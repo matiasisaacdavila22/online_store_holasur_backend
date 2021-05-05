@@ -22,12 +22,14 @@ import {
   response
 } from '@loopback/rest';
 import {Customer} from '../models';
-import {CustomerRepository} from '../repositories';
+import {CustomerRepository, UserRepository} from '../repositories';
 
 export class CustomerController {
   constructor(
     @repository(CustomerRepository)
     public customerRepository: CustomerRepository,
+    @repository(UserRepository)
+    public userRepository: UserRepository,
   ) { }
 
   @post('/customer')
@@ -48,7 +50,19 @@ export class CustomerController {
     })
     customer: Omit<Customer, 'id'>,
   ): Promise<Customer> {
-    return this.customerRepository.create(customer);
+
+    let c = await this.customerRepository.create(customer);
+    let u = {
+      username: c.document,
+      password: c.document,
+      role: 1,
+      customerId: c.id
+    };
+
+    let user = await this.userRepository.create(u);
+    user.password = '';
+    c.user = user;
+    return c;
   }
 
   @get('/customer/count')
