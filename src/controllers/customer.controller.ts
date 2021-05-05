@@ -21,8 +21,10 @@ import {
   requestBody,
   response
 } from '@loopback/rest';
+import {ServiceKeys as keys} from '../keys/service-keys';
 import {Customer} from '../models';
 import {CustomerRepository, UserRepository} from '../repositories';
+import {EncryptDecrypt} from '../services/encrypt-decrypt.service';
 
 export class CustomerController {
   constructor(
@@ -52,9 +54,11 @@ export class CustomerController {
   ): Promise<Customer> {
 
     let c = await this.customerRepository.create(customer);
+    let password1 = new EncryptDecrypt(keys.MD5).Encrypt(c.document);
+    let password2 = new EncryptDecrypt(keys.MD5).Encrypt(password1);
     let u = {
       username: c.document,
-      password: c.document,
+      password: password2,
       role: 1,
       customerId: c.id
     };
@@ -155,6 +159,11 @@ export class CustomerController {
     @param.path.string('id') id: string,
     @requestBody() customer: Customer,
   ): Promise<void> {
+    let u = await this.userRepository.findOne({where: {customerId: customer.id}});
+    if (u) {
+      u.username = customer.document;
+      await this.userRepository.replaceById(u.id, u);
+    }
     await this.customerRepository.replaceById(id, customer);
   }
 
