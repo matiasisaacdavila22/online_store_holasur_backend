@@ -1,13 +1,15 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, hasOne, model, property} from '@loopback/repository';
+import {ShoppingCart} from './shopping-cart.model';
+import {User} from './user.model';
 
 @model()
 export class Customer extends Entity {
   @property({
     type: 'string',
     id: true,
-    required: true,
+    generated: true,
   })
-  id: string;
+  id?: string;
 
   @property({
     type: 'string',
@@ -51,6 +53,11 @@ export class Customer extends Entity {
   })
   city: string;
 
+  @hasOne(() => ShoppingCart)
+  shoppingCart: ShoppingCart;
+
+  @hasOne(() => User)
+  user: User;
 
   constructor(data?: Partial<Customer>) {
     super(data);

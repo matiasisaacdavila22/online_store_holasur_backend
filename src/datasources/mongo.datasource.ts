@@ -2,6 +2,11 @@ import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
 
 const config = {
+  writeConcern: {
+    j: false,
+    w: 1,
+    wtimeout: 10000
+  },
   name: 'mongo',
   connector: 'mongodb',
   url: 'mongodb+srv://online_user_store_db:Ea2k7690GM99rI7R@cluster0.pzh4e.mongodb.net/mercadonegro_store_DB?retryWrites=true&w=majority',
@@ -10,7 +15,9 @@ const config = {
   user: 'online_user_store_db',
   password: 'Ea2k7690GM99rI7R',
   database: 'ProductSalesDB',
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+
 };
 
 // Observe application's life cycle to disconnect the datasource when
