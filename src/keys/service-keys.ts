@@ -4,4 +4,6 @@ export namespace ServiceKeys {
   export const SHA_512 = 'sha512';
   export const AES_SECRET_KEY = 'AES@SecretKeys*';
   export const LOGIN_CRYPT_METHOD = MD5;
+  export const JWT_SECRET_KEY = 'JWT@SecretKeys*';
+  export const TOKEN_EXPIRATION_TIME = Math.floor(Date.now() / 1000) * 3600;
 }

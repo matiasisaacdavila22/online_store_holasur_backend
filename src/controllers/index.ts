@@ -19,3 +19,4 @@ export * from './shopping-cart-sale-item.controller';
 export * from './customer-shopping-cart.controller';
 export * from './customer-user.controller';
 export * from './user-customer.controller';
+export * from './user.controller';
