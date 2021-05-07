@@ -1,21 +1,22 @@
 import {
+  authenticate
+} from '@loopback/authentication';
+import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+  patch, post,
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Brnad} from '../models';
 import {BrnadRepository} from '../repositories';
@@ -23,9 +24,10 @@ import {BrnadRepository} from '../repositories';
 export class BrandController {
   constructor(
     @repository(BrnadRepository)
-    public brnadRepository : BrnadRepository,
-  ) {}
+    public brnadRepository: BrnadRepository,
+  ) { }
 
+  @authenticate('admin')
   @post('/brand')
   @response(200, {
     description: 'Brnad model instance',
@@ -76,6 +78,7 @@ export class BrandController {
     return this.brnadRepository.find(filter);
   }
 
+  @authenticate('admin')
   @patch('/brand')
   @response(200, {
     description: 'Brnad PATCH success count',
@@ -111,6 +114,7 @@ export class BrandController {
     return this.brnadRepository.findById(id, filter);
   }
 
+  @authenticate('admin')
   @patch('/brand/{id}')
   @response(204, {
     description: 'Brnad PATCH success',
@@ -129,6 +133,7 @@ export class BrandController {
     await this.brnadRepository.updateById(id, brnad);
   }
 
+  @authenticate('admin')
   @put('/brand/{id}')
   @response(204, {
     description: 'Brnad PUT success',
@@ -140,6 +145,7 @@ export class BrandController {
     await this.brnadRepository.replaceById(id, brnad);
   }
 
+  @authenticate('admin')
   @del('/brand/{id}')
   @response(204, {
     description: 'Brnad DELETE success',

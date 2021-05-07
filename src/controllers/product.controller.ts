@@ -4,28 +4,34 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
+
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
+import {authenticate} from 'passport';
 import {Product} from '../models';
 import {ProductRepository} from '../repositories';
 
 export class ProductController {
   constructor(
     @repository(ProductRepository)
-    public productRepository : ProductRepository,
-  ) {}
+    public productRepository: ProductRepository,
+  ) { }
 
+  @authenticate('admin')
   @post('/product')
   @response(200, {
     description: 'Product model instance',
@@ -47,6 +53,7 @@ export class ProductController {
     return this.productRepository.create(product);
   }
 
+  @authenticate('admin')
   @get('/product/count')
   @response(200, {
     description: 'Product model count',

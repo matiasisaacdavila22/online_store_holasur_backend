@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -69,6 +70,7 @@ export class CustomerController {
     return c;
   }
 
+  @authenticate('admin')
   @get('/customer/count')
   @response(200, {
     description: 'Customer model count',
@@ -98,6 +100,7 @@ export class CustomerController {
     return this.customerRepository.find(filter);
   }
 
+  @authenticate('admin')
   @patch('/customer')
   @response(200, {
     description: 'Customer PATCH success count',
@@ -117,6 +120,7 @@ export class CustomerController {
     return this.customerRepository.updateAll(customer, where);
   }
 
+  @authenticate('admin')
   @get('/customer/{id}')
   @response(200, {
     description: 'Customer model instance',
@@ -133,6 +137,7 @@ export class CustomerController {
     return this.customerRepository.findById(id, filter);
   }
 
+  @authenticate('admin')
   @patch('/customer/{id}')
   @response(204, {
     description: 'Customer PATCH success',
@@ -151,6 +156,7 @@ export class CustomerController {
     await this.customerRepository.updateById(id, customer);
   }
 
+  @authenticate('admin')
   @put('/customer/{id}')
   @response(204, {
     description: 'Customer PUT success',
@@ -167,6 +173,7 @@ export class CustomerController {
     await this.customerRepository.replaceById(id, customer);
   }
 
+  @authenticate('admin')
   @del('/customer/{id}')
   @response(204, {
     description: 'Customer DELETE success',

@@ -38,4 +38,16 @@ export class AuthService {
       ServiceKeys.JWT_SECRET_KEY);
     return token;
   }
+
+  async VerifyToken(token: string) {
+    try {
+      let data = jwt.verify(token, ServiceKeys.JWT_SECRET_KEY);
+      return data;
+    } catch {
+      return null;
+    }
+  }
+
+
+
 }

@@ -1,21 +1,19 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+  patch, post,
   put,
-  del,
   requestBody,
-  response,
+  response
 } from '@loopback/rest';
 import {Category} from '../models';
 import {CategoryRepository} from '../repositories';
@@ -23,9 +21,9 @@ import {CategoryRepository} from '../repositories';
 export class CategoryController {
   constructor(
     @repository(CategoryRepository)
-    public categoryRepository : CategoryRepository,
-  ) {}
-
+    public categoryRepository: CategoryRepository,
+  ) { }
+  @authenticate('admin')
   @post('/category')
   @response(200, {
     description: 'Category model instance',
@@ -76,6 +74,7 @@ export class CategoryController {
     return this.categoryRepository.find(filter);
   }
 
+  @authenticate('admin')
   @patch('/category')
   @response(200, {
     description: 'Category PATCH success count',
@@ -111,6 +110,7 @@ export class CategoryController {
     return this.categoryRepository.findById(id, filter);
   }
 
+  @authenticate('admin')
   @patch('/category/{id}')
   @response(204, {
     description: 'Category PATCH success',
@@ -129,6 +129,7 @@ export class CategoryController {
     await this.categoryRepository.updateById(id, category);
   }
 
+  @authenticate('admin')
   @put('/category/{id}')
   @response(204, {
     description: 'Category PUT success',
@@ -140,6 +141,7 @@ export class CategoryController {
     await this.categoryRepository.replaceById(id, category);
   }
 
+  @authenticate('admin')
   @del('/category/{id}')
   @response(204, {
     description: 'Category DELETE success',
