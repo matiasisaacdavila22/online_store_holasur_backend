@@ -9,19 +9,11 @@ import {
 import {
   del, get,
   getModelSchemaRef, param,
-
-
   patch, post,
-
-
-
-
   put,
-
   requestBody,
   response
 } from '@loopback/rest';
-import {authenticate} from 'passport';
 import {Product} from '../models';
 import {ProductRepository} from '../repositories';
 
@@ -31,7 +23,7 @@ export class ProductController {
     public productRepository: ProductRepository,
   ) { }
 
-  @authenticate('admin')
+
   @post('/product')
   @response(200, {
     description: 'Product model instance',
@@ -53,7 +45,7 @@ export class ProductController {
     return this.productRepository.create(product);
   }
 
-  @authenticate('admin')
+
   @get('/product/count')
   @response(200, {
     description: 'Product model count',
@@ -82,6 +74,7 @@ export class ProductController {
   ): Promise<Product[]> {
     return this.productRepository.find(filter);
   }
+
 
   @patch('/product')
   @response(200, {
@@ -118,6 +111,7 @@ export class ProductController {
     return this.productRepository.findById(id, filter);
   }
 
+
   @patch('/product/{id}')
   @response(204, {
     description: 'Product PATCH success',
@@ -135,6 +129,7 @@ export class ProductController {
   ): Promise<void> {
     await this.productRepository.updateById(id, product);
   }
+
 
   @put('/product/{id}')
   @response(204, {

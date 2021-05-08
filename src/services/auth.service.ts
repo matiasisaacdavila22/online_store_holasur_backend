@@ -12,11 +12,9 @@ export class AuthService {
   ) {
   }
   async Identify(username: string, password: string): Promise<User | false> {
-    console.log('username:' + username + '  and password:' + password);
     let user = await this.userRepository.findOne({where: {username: username}});
     if (user) {
       let cryptPass = new EncryptDecrypt(ServiceKeys.LOGIN_CRYPT_METHOD).Encrypt(password);
-      console.log('password:' + user.password + ' y el crypyPass: ' + cryptPass)
       if (user.password == cryptPass) {
         return user;
       }
@@ -41,13 +39,11 @@ export class AuthService {
 
   async VerifyToken(token: string) {
     try {
-      let data = jwt.verify(token, ServiceKeys.JWT_SECRET_KEY);
+      let data = jwt.verify(token, ServiceKeys.JWT_SECRET_KEY).data;
       return data;
     } catch {
       return null;
     }
   }
-
-
 
 }

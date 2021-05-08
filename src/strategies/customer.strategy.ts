@@ -6,9 +6,9 @@ import parseBearerToken from 'parse-bearer-token';
 import {AuthService} from '../services/auth.service';
 
 
-export class AdminStrategy implements AuthenticationStrategy {
+export class CustomerStrategy implements AuthenticationStrategy {
 
-  name: string = 'admin';
+  name: string = 'customer';
 
 
   constructor(@service(AuthService)
@@ -25,12 +25,12 @@ export class AdminStrategy implements AuthenticationStrategy {
     let perfil = await this.authService.VerifyToken(token).then(data => {
       try {
         if (data) {
-          if (data.role == 2) {
+          if (data.role == 1) {
             let perfil: UserProfile = Object.assign({
               nombre_usuario: data.username,
-              rol: 2
+              rol: 1
             });
-            console.log('es todo ok es admin ************************** ')
+            console.log('es todo ok es customer ************************** ')
             return perfil;
           } else {
             console.log('no tiene una cuenta con rol para ejecutar esta action*************************** ')

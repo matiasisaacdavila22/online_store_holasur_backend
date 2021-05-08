@@ -27,7 +27,7 @@ export class BrandController {
     public brnadRepository: BrnadRepository,
   ) { }
 
-  @authenticate('admin')
+  @authenticate('admin', 'customer')
   @post('/brand')
   @response(200, {
     description: 'Brnad model instance',
@@ -49,6 +49,7 @@ export class BrandController {
     return this.brnadRepository.create(brnad);
   }
 
+
   @get('/brand/count')
   @response(200, {
     description: 'Brnad model count',
@@ -60,6 +61,7 @@ export class BrandController {
     return this.brnadRepository.count(where);
   }
 
+  @authenticate('admin')
   @get('/brand')
   @response(200, {
     description: 'Array of Brnad model instances',

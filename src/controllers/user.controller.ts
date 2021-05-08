@@ -2,7 +2,8 @@
 
 import {post, requestBody} from '@loopback/openapi-v3';
 import {repository} from '@loopback/repository';
-import {HttpErrors} from '@loopback/rest';
+import {getModelSchemaRef, HttpErrors, response} from '@loopback/rest';
+import {ResetPass} from '../models';
 import {UserRepository} from '../repositories';
 import {AuthService} from '../services/auth.service';
 
@@ -23,6 +24,7 @@ export class UserController {
   ) {
     this.authService = new AuthService(this.userRepository)
   }
+
 
   @post('/login', {
     responses: {
@@ -46,4 +48,29 @@ export class UserController {
     }
   }
 
+  @post('/reset-password')
+  @response(200, {
+    description: 'reset password for SMS',
+    content: {'application/json': {schema: getModelSchemaRef(ResetPass)}},
+  })
+  async resetPassword(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(ResetPass),
+        },
+      },
+    })
+    resetPass: ResetPass,
+  ): Promise<Object> {
+    let usuario = await this.userRepository.findOne({where: {username: resetPass.correo}})
+    if (!usuario) {
+      throw new HttpErrors[401]('este usuario no exite');
+    }
+    let mensage = `hola ${usuario.username} se a solicitado una nueva clave para la plataforma mercado negro.`
+
+    return {
+      envio: "ok"
+    }
+  }
 }
