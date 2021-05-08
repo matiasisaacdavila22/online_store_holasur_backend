@@ -2,8 +2,7 @@
 
 import {post, requestBody} from '@loopback/openapi-v3';
 import {repository} from '@loopback/repository';
-import {getModelSchemaRef, HttpErrors, response} from '@loopback/rest';
-import {ResetPass} from '../models';
+import {HttpErrors} from '@loopback/rest';
 import {UserRepository} from '../repositories';
 import {AuthService} from '../services/auth.service';
 
@@ -12,6 +11,11 @@ import {AuthService} from '../services/auth.service';
 class Credentials {
   username: string;
   password: string;
+}
+
+class PasswordResetData {
+  username: string;
+  type: number;
 }
 
 export class UserController {
@@ -48,29 +52,37 @@ export class UserController {
     }
   }
 
-  @post('/reset-password')
-  @response(200, {
-    description: 'reset password for SMS',
-    content: {'application/json': {schema: getModelSchemaRef(ResetPass)}},
-  })
-  async resetPassword(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(ResetPass),
-        },
-      },
-    })
-    resetPass: ResetPass,
-  ): Promise<Object> {
-    let usuario = await this.userRepository.findOne({where: {username: resetPass.correo}})
-    if (!usuario) {
-      throw new HttpErrors[401]('este usuario no exite');
-    }
-    let mensage = `hola ${usuario.username} se a solicitado una nueva clave para la plataforma mercado negro.`
 
-    return {
-      envio: "ok"
+  @post('/password-reset', {
+    responses: {
+      '200': {
+        description: 'reset for password'
+      }
     }
+  })
+  async reset(
+    @requestBody() passwordResetData: PasswordResetData
+  ): Promise<boolean> {
+    let randonPassword = this.authService.ResetPassword(passwordResetData.username);
+    if (randonPassword) {
+
+      switch (passwordResetData.type) {
+        case 1:
+          //send sms
+          console.log('sending sms : ' + randonPassword);
+          return true;
+          break;
+        case 2:
+          //send email
+          console.log('sending email : ' + randonPassword);
+          return true;
+          break;
+
+        default:
+          throw new HttpErrors[400]('this notification not soport');
+          break;
+      }
+
+    } throw new HttpErrors[400]('user no found');
   }
 }

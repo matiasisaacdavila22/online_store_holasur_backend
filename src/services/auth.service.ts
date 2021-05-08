@@ -1,4 +1,6 @@
 import {repository} from '@loopback/repository';
+import {generate as generator} from 'generate-password';
+import {PasswordKeys} from '../keys/password-keys';
 import {ServiceKeys} from '../keys/service-keys';
 import {User} from '../models/user.model';
 import {UserRepository} from '../repositories';
@@ -46,4 +48,30 @@ export class AuthService {
     }
   }
 
+  async ResetPassword(username: string): Promise<string | false> {
+    let user = this.userRepository.findOne({where: {username: username}}).then(user => {
+      console.log('******************' + user)
+      if (user) {
+
+        let randonPassword = generator({
+          length: PasswordKeys.LENGTH,
+          numbers: PasswordKeys.NUMBERS,
+          lowercase: PasswordKeys.LOWERCASE,
+          uppercase: PasswordKeys.UPPERCASE
+        });
+        let crypter = new EncryptDecrypt(ServiceKeys.LOGIN_CRYPT_METHOD);
+        let password = crypter.Encrypt(crypter.Encrypt(randonPassword));
+        user.password = password;
+        this.userRepository.replaceById(user.id, user);
+
+        return randonPassword;
+
+      }
+      return false;
+    });
+
+    return user;
+  }
+
 }
+
