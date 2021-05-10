@@ -21,10 +21,14 @@ import {
   requestBody,
   response
 } from '@loopback/rest';
+import {generate} from 'generate-password';
+import {PasswordKeys} from '../keys/password-keys';
 import {ServiceKeys as keys} from '../keys/service-keys';
 import {Customer} from '../models';
+import {EmailNotifications} from '../models/email-notifications.model';
 import {CustomerRepository, UserRepository} from '../repositories';
 import {EncryptDecrypt} from '../services/encrypt-decrypt.service';
+import {NotificacionesService} from '../services/notificaiones.service';
 
 export class CustomerController {
   constructor(
@@ -54,7 +58,13 @@ export class CustomerController {
   ): Promise<Customer> {
 
     let c = await this.customerRepository.create(customer);
-    let password1 = new EncryptDecrypt(keys.MD5).Encrypt(c.document);
+    let randonPassword = generate({
+      length: PasswordKeys.LENGTH,
+      numbers: PasswordKeys.NUMBERS,
+      lowercase: PasswordKeys.LOWERCASE,
+      uppercase: PasswordKeys.UPPERCASE
+    })
+    let password1 = new EncryptDecrypt(keys.MD5).Encrypt(randonPassword);
     let password2 = new EncryptDecrypt(keys.MD5).Encrypt(password1);
     let u = {
       username: c.document,
@@ -64,7 +74,13 @@ export class CustomerController {
     };
 
     let user = await this.userRepository.create(u);
-    user.password = '';
+    let notificationEmail = new EmailNotifications({
+      textBody: `Hola! ${c.name} Bienvenido a mercadoNegro su Usuario es su Documento y contrasenia es : ${randonPassword}`,
+      htmlBody: `Hola! ${c.name} Bienvenido a mercadoNegro su Usuario es su Documento <br> contrasenia es : ${randonPassword}`,
+      to: customer.email,
+      subject: 'Bienvenidos a bordo de MercadoNegro'
+    });
+    new NotificacionesService().EmailNotifications(notificationEmail)
     c.user = user;
     return c;
   }
