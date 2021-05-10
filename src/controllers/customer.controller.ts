@@ -36,6 +36,7 @@ export class CustomerController {
     public userRepository: UserRepository,
   ) { }
 
+  @post('/customer')
   @response(200, {
     description: 'Customer model instance',
     content: {'application/json': {schema: getModelSchemaRef(Customer)}},
