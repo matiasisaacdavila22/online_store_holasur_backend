@@ -50,7 +50,7 @@ export class AuthService {
 
   async ResetPassword(username: string): Promise<string | false> {
     let user = this.userRepository.findOne({where: {username: username}}).then(user => {
-      console.log('******************' + user)
+
       if (user) {
 
         let randonPassword = generator({
