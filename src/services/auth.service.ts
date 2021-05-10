@@ -50,7 +50,7 @@ export class AuthService {
 
   async ResetPassword(username: string): Promise<string | false> {
     let user = this.userRepository.findOne({where: {username: username}}).then(user => {
-      console.log('******************' + user)
+
       if (user) {
 
         let randonPassword = generator({
@@ -63,7 +63,6 @@ export class AuthService {
         let password = crypter.Encrypt(crypter.Encrypt(randonPassword));
         user.password = password;
         this.userRepository.replaceById(user.id, user);
-
         return randonPassword;
 
       }
