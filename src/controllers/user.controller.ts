@@ -3,10 +3,14 @@
 import {post, requestBody} from '@loopback/openapi-v3';
 import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
+
 import {Customer} from '../models/customer.model';
 import {EmailNotifications} from '../models/email-notifications.model';
 import {SmsNotification} from '../models/sms-notification.model';
 import {CustomerRepository, UserRepository} from '../repositories';
+
+import {UserRepository} from '../repositories';
+
 import {AuthService} from '../services/auth.service';
 import {NotificacionesService} from '../services/notificaiones.service';
 
@@ -55,6 +59,7 @@ export class UserController {
       throw new HttpErrors[401]('user or Password invalid.')
     }
   }
+
 
 
   @post('/password-reset', {
@@ -115,6 +120,9 @@ export class UserController {
 
     }
     throw new HttpErrors[400]('user no found');
+
+
+
   }
 }
 

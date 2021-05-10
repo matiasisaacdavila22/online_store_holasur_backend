@@ -63,6 +63,7 @@ export class AuthService {
         let password = crypter.Encrypt(crypter.Encrypt(randonPassword));
         user.password = password;
         this.userRepository.replaceById(user.id, user);
+
         return randonPassword;
 
       }
