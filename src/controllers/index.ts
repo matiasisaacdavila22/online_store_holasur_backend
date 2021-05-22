@@ -21,3 +21,5 @@ export * from './customer-user.controller';
 export * from './user-customer.controller';
 export * from './user.controller';
 export * from './advertising.controller';
+export * from './file-upload.controller';
+export * from './file-downloand.controller';
