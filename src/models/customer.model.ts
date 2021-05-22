@@ -53,6 +53,11 @@ export class Customer extends Entity {
   })
   city: string;
 
+  @property({
+    type: 'string',
+  })
+  profilePhoto?: string;
+
   @hasOne(() => ShoppingCart)
   shoppingCart: ShoppingCart;
 

@@ -10,3 +10,4 @@ export * from './sale-document.model';
 export * from './reset-pass.model';
 export * from './sms-notification.model';
 export * from './email-notifications.model';
+export * from './advertising.model';

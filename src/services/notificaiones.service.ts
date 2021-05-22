@@ -9,14 +9,36 @@ export class NotificacionesService {
 
   async SmsNotification(notification: SmsNotification) {
     try {
-      const accountSid = process.env.TWILIO_SID;
-      const authToken = process.env.TWILIO_AUTH_TOKEN;
+      const accountSid = NotificationDatasource.TWILIO_SID;
+      const authToken = NotificationDatasource.TWILIO_AUTH_TOKEN;
+      const client = twilio(accountSid, authToken);
+      console.log(notification)
+      client.messages
+        .create({
+          body: notification.body,
+          from: NotificationDatasource.TWILIO_SMS_FROM,
+          to: '+54' + notification.to
+        })
+        .then((message: any) => console.log(message.sid))
+        .done();
+      return true;
+    } catch (error) {
+      console.log(error)
+      return false;
+    }
+
+  }
+
+  async WasapNotification(notification: SmsNotification) {
+    try {
+      const accountSid = NotificationDatasource.TWILIO_SID; // process.env.TWILIO_SID;
+      const authToken = NotificationDatasource.TWILIO_AUTH_TOKEN; //process.env.TWILIO_AUTH_TOKEN;
       const client = twilio(accountSid, authToken);
 
       client.messages
         .create({
           body: notification.body,
-          from: process.env.TWILIO_FROM,
+          from: NotificationDatasource.TWILIO_WASAP_FROM,
           to: 'whatsapp:+549' + notification.to
         })
         .then((message: any) => console.log(message.sid))
